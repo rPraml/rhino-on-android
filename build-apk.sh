@@ -8,14 +8,17 @@ APP=app/build/outputs/apk/debug/app-debug.apk
 
 # Build section: Requires some permission tweaking
 set -e
-mkdir -p .gradle
-mkdir -p .gradle-cache
-mkdir -p build
-mkdir -p app/build
-chmod o+w .gradle build app/build .gradle-cache
+mkdir -p container/.gradle
+mkdir -p container/.gradle-cache
+mkdir -p container/build
+mkdir -p container/app/build
+chmod o+w container/.gradle container/.gradle-cache container/build container/app/build
 docker run -it --rm \
   -v $PWD:/home/androidusr/tmp \
-  -v $PWD/.gradle-cache:/home/androidusr/.gradle \
+  -v $PWD/container/.gradle:/home/androidusr/tmp/.gradle \
+  -v $PWD/container/build:/home/androidusr/tmp/build \
+  -v $PWD/container/app/build:/home/androidusr/tmp/app/build \
+  -v $PWD/container/.gradle-cache:/home/androidusr/.gradle \
   -w /home/androidusr/tmp \
   --entrypoint "/bin/bash" \
   budtmo/docker-android:emulator_14.0 -c "./gradlew build"
